@@ -1,0 +1,64 @@
+Function strCompare(string1 As String, string2 As String) As Boolean
+    If string1 = string2 Then
+        strCompare = True
+    Else
+        strCompare = False
+    End If
+End Function
+
+Sub tickTick()
+
+'run loop for each worksheep'
+Dim ws As Worksheet
+
+'Set ws = Sheets(1)
+
+Dim ticker As String
+Dim nextTicker As String
+Dim vol As Double
+Dim row_i As Double
+Dim col_i As Double
+col_i = 7
+Dim last_row As Double
+last_row = Range("A1048576").End(xlUp).Row
+Dim SumTicker As String
+    
+
+For Each ws In Worksheets
+'create tickerRow
+    tickerRow = 2
+    vol = 0
+
+For row_i = 2 To last_row
+    ticker = ws.Cells(row_i, 1).Value
+    nextTicker = ws.Cells(row_i + 1, 1)
+    
+    
+'If current column = next column, then add cells(row_i,col_i) to vol
+If strCompare(ticker, nextTicker) Then
+    vol = vol + ws.Cells(row_i, col_i).Value
+    
+Else
+    'reset volumn count'
+    vol = vol + ws.Cells(row_i, col_i).Value
+   'add unique ticker to the table'
+    ws.Cells(tickerRow, 9).Value = ticker
+    'add respective volume to the table'
+    ws.Cells(tickerRow, 10).Value = vol
+    
+   
+
+    tickerRow = tickerRow + 1
+   'reset volume'
+    vol = 0
+    'Set the next ticker'
+    ticker = ws.Cells(row_i + 1, 1).Value
+
+    
+'end close ticker - first open ticker for each
+
+End If
+
+Next row_i
+Next ws
+End Sub
